@@ -1,6 +1,37 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
-app.MapGet("/", () => "Hello World!");
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(opt =>
+{
+    opt.RequireHttpsMetadata = false;
+    opt.SaveToken = false;
+    opt.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("SADASDASFdasdasdasdASDASDASDA1212312123423423423423423423423423423423423423432")),
+        ValidateIssuerSigningKey = false,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["CorsOrigin"]
+    };
+});
+builder.Services.AddAuthorization(opts =>
+{
+    opts.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    opts.AddPolicy("User", policy => policy.RequireRole("User"));
+});
+
+var app = builder.Build();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapGet("/", [Authorize]() => "Hello World!").RequireAuthorization("User");
 
 app.Run();
