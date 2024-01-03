@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,9 +18,8 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = false,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("SADASDASFdasdasdasdASDASDASDA1212312123423423423423423423423423423423423423432")),
-        ValidateIssuerSigningKey = false,
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["CorsOrigin"]
+        ValidateIssuerSigningKey = true,
+        ValidateAudience = false,
     };
 });
 builder.Services.AddAuthorization(opts =>
@@ -32,6 +32,9 @@ var app = builder.Build();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/", [Authorize]() => "Hello World!").RequireAuthorization("User");
+app.MapGet("/", [Authorize]() => "Hello World!");
+app.MapGet("/teste", (
+    ClaimsPrincipal userIdentificacao
+    ) => $"{userIdentificacao.Identities}");
 
 app.Run();
