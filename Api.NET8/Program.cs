@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,8 +32,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGet("/", [Authorize]() => "Hello World!");
-app.MapGet("/teste", (
-    ClaimsPrincipal userIdentificacao
-    ) => $"{userIdentificacao.Identities}");
+app.MapGet("/testerole", [Authorize] () => "Funcionou").RequireAuthorization("User");
 
 app.Run();
