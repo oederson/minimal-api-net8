@@ -32,6 +32,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGet("/", [Authorize]() => "Hello World!");
-app.MapGet("/testerole", [Authorize] () => "Funcionou").RequireAuthorization("User");
+app.MapGet("/testeRoleUser", [Authorize] () => "Funcionou").RequireAuthorization("User");
+app.MapGet("/testeRoleAdmin", [Authorize] () => "Funcionou").RequireAuthorization("Admin");
 
 app.Run();
