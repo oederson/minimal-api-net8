@@ -25,8 +25,7 @@ builder.Services.AddAuthorization(opts =>
 {
     opts.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
     opts.AddPolicy("User", policy => policy.RequireRole("User"));
-    opts.AddPolicy("Anonimo", policy => policy.RequireRole("Anonimo"));
-    opts.AddPolicy("Autor", policy => policy.RequireRole("Autor"));
+
 });
 
 var app = builder.Build();
@@ -36,7 +35,6 @@ app.UseAuthorization();
 app.MapGet("/", [Authorize]() => "Hello World!");
 app.MapGet("/testeRoleUser", [Authorize] () => "Funcionou").RequireAuthorization("User");
 app.MapGet("/testeRoleAdmin", [Authorize] () => "Funcionou").RequireAuthorization("Admin");
-app.MapGet("/testeRoleAnonimo", [Authorize] () => "Funcionou").RequireAuthorization("Anonimo");
-app.MapGet("/testeRoleAutor", [Authorize] () => "Funcionou").RequireAuthorization("Autor");
+
 
 app.Run();
