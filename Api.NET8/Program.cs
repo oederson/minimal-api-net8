@@ -17,7 +17,7 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = false,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("SADASDASFdasdasdasdASDASDASDA1212312123423423423423423423423423423423423423432")),
-        ValidateIssuerSigningKey = true,
+        ValidateIssuerSigningKey = false,
         ValidateAudience = false,
     };
 });
@@ -35,6 +35,4 @@ app.UseAuthorization();
 app.MapGet("/", [Authorize]() => "Hello World!");
 app.MapGet("/testeRoleUser", [Authorize] () => "Funcionou").RequireAuthorization("User");
 app.MapGet("/testeRoleAdmin", [Authorize] () => "Funcionou").RequireAuthorization("Admin");
-
-
 app.Run();
